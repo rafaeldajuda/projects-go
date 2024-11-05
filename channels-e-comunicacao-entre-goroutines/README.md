@@ -35,7 +35,7 @@ close(ch1)
 
 ## Operador de comunicação
 
-Os canais possui um operador de comunição de transmissão de dados entre eles. É um operador bem intuitivo que indica o fluxo da comunição (receber/enviar).
+Os canais possuem um operador de comunicação de transmissão de dados entre eles. É um operador bem intuitivo que indica o fluxo da comunicação (receber/enviar).
 
 **Envio de dados**
 
@@ -73,7 +73,7 @@ Os canais são bloqueantes por padrão. Isso significa que:
 * Quando uma goroutine envia um valor a um canal, ela fica bloqueada até que outra goroutine leia o valor.
 * Quando uma goroutine tenta ler de um canal vazio, ela fica bloqueada até que um valor esteja disponível.
 
-Esse comportamento garante uma sincronização natural, o que é especialmente útilpara coordenar o fluxo de execução de goroutines.
+Esse comportamento garante uma sincronização natural, o que é especialmente útil para coordenar o fluxo de execução de goroutines.
 
 ## Exemplo de comunicação entre goroutines
 
@@ -121,6 +121,39 @@ Go lançará um erro:
     **Error run <path> with code Crashed Fatal error: all goroutines are asleep - deadlock!**
 
 Essa ocorrência se dá polo fato de o tempo de execução do Go, ser capaz de detectar que todas as goroutines estão aguardando por algo, impedindo assim o avanço do programa. Trata-se de uma forma de impasse (deadlock) que o tempo de execução é capaz de identificar.
+
+## Tipos de canais
+
+* **Canal não bufferizado:** Um canal sem buffer armazena apenas um valor e exige que tanto o envio quando o recebimento ocorram simultaneamente.
+* **Canal bufferizado:** Um canal com buffer permite enviar múltiplos valores antes que um recebimento ocorra, sem bloquear a goroutine de envio até o buffer ficar cheio. Por exemplo:
+    ```go
+    ch := make(chan int, 3) // Canal bufferizado com capacidade para 3 valores
+    ```
+
+## Usando Canais para Coordenação e Sincronização
+
+Além da comunicação, os canais podem coordenar e sincronizar tarefas. Um exemplo comum é o uso de um canal de "sinalização" para indicar que uma goroutine terminou seu trabalho:
+
+```go
+package main
+
+import "fmt"
+
+func task(done chan bool) {
+    fmt.Println("Trabalhando...")
+    done <- true // Sinaliza a conclusão
+}
+
+func main() {
+    done := make(chan bool)
+    go task(done)
+
+    <-done // Aguarda a conclusão da goroutine
+    fmt.Println("Trabalho concluído!")
+}
+```
+
+Aqui o canal **done** é usado para sinalizar o término de **task**. A goroutine envia **true** para **done**, e o **main** bloqueia até receber esse valor, sincrozinando as operações.
 
 ## Referência Utilizada
 * O projeto foi desenvolvido com base no conteúdo disponível no artigo: [Concorrência em Go](https://medium.com/@rafaelmgr12/concorr%C3%AAncia-em-go-85b6a127b12f#:~:text=Os%20channels%20s%C3%A3o%20canais%20de,corrida%20e%20problemas%20de%20concorr%C3%AAncia.).
