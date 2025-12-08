@@ -14,14 +14,15 @@ import (
 )
 
 func init() {
-
+	os.Setenv("MONGO_URI", "")
+	os.Setenv("SERVICE_HOST", ":8080")
 }
 
 func main() {
 	// 1 - Conectar ao MongoDB
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
-		mongoURI = "mongodb://localhost:27017"
+		mongoURI = "mongodb://admin:admin@localhost:27017"
 	}
 
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoURI))

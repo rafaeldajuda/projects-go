@@ -4,6 +4,8 @@ import (
 	"errors"
 	"main/internal/domain"
 	"main/internal/repository"
+
+	"github.com/google/uuid"
 )
 
 type OrderService struct {
@@ -28,6 +30,10 @@ func (s *OrderService) CreateOrder(order *domain.Order) error {
 	if order.Customer.Name == "" || order.Customer.Email == "" {
 		return errors.New("invalid customer data")
 	}
+
+	// gerando id unico
+	uuid := uuid.New().String()
+	order.ID = uuid
 
 	_, err := s.repo.Create(*order)
 	if err != nil {
@@ -59,6 +65,18 @@ func (s *OrderService) UpdateOrder(order domain.Order) (*domain.Order, error) {
 		return nil, errors.New("invalid id")
 	} else if order.Customer.Name == "" || order.Customer.Email == "" {
 		return nil, errors.New("invalid customer data")
+	}
+
+	status := string(order.Status)
+	newStatus := ""
+	if status == string(domain.StatusCreated) {
+		newStatus = string(domain.StatusProcessing)
+	} else if status == string(domain.StatusProcessing) {
+		newStatus = string(domain.StatusCompleted)
+	}
+
+	if err := order.UpdateStatus(newStatus); err != nil {
+		return nil, err
 	}
 
 	_, err := s.repo.Update(order)

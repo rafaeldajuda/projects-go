@@ -67,7 +67,7 @@ func (h *Handler) ListAllOrders(c *fiber.Ctx) error {
 }
 
 func (h *Handler) GetOrderByID(c *fiber.Ctx) error {
-	id := c.Get("id")
+	id := c.Params("id")
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "invalid order id value",
@@ -85,18 +85,20 @@ func (h *Handler) GetOrderByID(c *fiber.Ctx) error {
 }
 
 func (h *Handler) UpdateOrder(c *fiber.Ctx) error {
+	id := c.Params("id")
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid order id value",
+		})
+	}
+
 	var req domain.Order
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "invalid body request",
 		})
 	}
-
-	if req.ID == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "invalid order id value",
-		})
-	}
+	req.ID = id
 
 	if req.TotalValue < 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
