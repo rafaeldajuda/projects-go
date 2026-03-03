@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Sistema de Estoque\n")
+	fmt.Printf("Sistema de Estoque\n\n")
 	estoque := services.NewEstoque()
 
 	itens := []models.Item{
@@ -55,5 +55,13 @@ func main() {
 	for _, item := range estoque.ListItems() {
 		fmt.Printf("ID: %d | item: %s | Quantidade: %d | Preço: %.2f\n", item.ID, item.Name, item.Quantity, item.Price)
 	}
+
+	itemParaBuscar, err := services.FindBy(itens, func(item models.Item) bool {
+		return item.ID == 5
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Item encontrado:", itemParaBuscar)
 
 }

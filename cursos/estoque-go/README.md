@@ -12,3 +12,6 @@
 - explicar sobre a diferença entre função e método
 
 - explicar sobre a diferença entre referência e ponteiro
+
+- explicar o que é uma função genérica (https://go.dev/doc/tutorial/generics)
+- como declarar uma função genérica
