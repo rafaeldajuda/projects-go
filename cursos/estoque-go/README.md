@@ -15,3 +15,7 @@
 
 - explicar o que é uma função genérica (https://go.dev/doc/tutorial/generics)
 - como declarar uma função genérica
+
+- explicar o que é uma interface
+- explicar como criar uma interface
+- quais são as vantagens de ter uma interface

@@ -64,4 +64,18 @@ func main() {
 	}
 	fmt.Println("Item encontrado:", itemParaBuscar)
 
+	alura := services.Fornecedor{
+		CNPJ:    "12345667",
+		Contato: "1279799989",
+		Cidade:  "Taubaté",
+	}
+
+	fmt.Println(alura.GetInfo())
+
+	if alura.VerificarDisponibilidade(100, 15) {
+		fmt.Println("Possui disponibilidade")
+	} else {
+		fmt.Println("Não possui disponibilidade")
+	}
+
 }
