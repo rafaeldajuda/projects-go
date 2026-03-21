@@ -32,3 +32,12 @@ func (h *PropertyHandler) CreateProperty(c fiber.Ctx) error {
 	// resposta de sucesso
 	return c.SendStatus(fiber.StatusCreated)
 }
+
+func (h *PropertyHandler) ListProperties(c fiber.Ctx) error {
+	var properties []*entity.Property
+
+	// listando properties
+	properties = h.uc.ExecuteList(c.Context())
+
+	return c.Status(fiber.StatusOK).JSON(&properties)
+}

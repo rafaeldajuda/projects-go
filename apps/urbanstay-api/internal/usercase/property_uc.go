@@ -3,8 +3,11 @@ package usercase
 import (
 	"context"
 	"errors"
+	"time"
 	"urbanstay-api/internal/domain"
 	"urbanstay-api/internal/domain/entity"
+
+	"github.com/google/uuid"
 )
 
 type PropertyUseCase struct {
@@ -25,6 +28,12 @@ func (uc *PropertyUseCase) ExecuteCreate(ctx context.Context, p *entity.Property
 	if p.PricePerNight <= 0 {
 		return errors.New("o preço por noite deve ser maior que zero")
 	}
+
+	// Gen ID
+	p.ID = uuid.NewString()
+
+	// Add created_at
+	p.CreatedAt = time.Now()
 
 	// Persistencia
 	// O Usecase não sabe se o 'repo' salva no MySQL ou na Memória

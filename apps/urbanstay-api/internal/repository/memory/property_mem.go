@@ -19,7 +19,12 @@ func (m *MemoryRepository) AddProperty(ctx context.Context, p *entity.Property) 
 }
 
 func (m *MemoryRepository) ListProperties(ctx context.Context) []*entity.Property {
-	list := []*entity.Property{}
-	copy(list, m.Properties)
+	list := make([]*entity.Property, len(m.Properties))
+	for k, v := range m.Properties {
+		if v != nil {
+			cp := *v
+			list[k] = &cp
+		}
+	}
 	return list
 }
