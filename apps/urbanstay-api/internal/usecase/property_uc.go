@@ -1,8 +1,7 @@
-package usercase
+package usecase
 
 import (
 	"context"
-	"errors"
 	"time"
 	"urbanstay-api/internal/domain"
 	"urbanstay-api/internal/domain/entity"
@@ -22,11 +21,8 @@ func NewPropertyUseCase(repo domain.PropertyRepository) *PropertyUseCase {
 
 func (uc *PropertyUseCase) ExecuteCreate(ctx context.Context, p *entity.Property) error {
 	// Regra de negócio
-	if p.Name == "" {
-		return errors.New("o nome do imóvel é obrigatório")
-	}
-	if p.PricePerNight <= 0 {
-		return errors.New("o preço por noite deve ser maior que zero")
+	if err := p.Validate(); err != nil {
+		return err
 	}
 
 	// Gen ID

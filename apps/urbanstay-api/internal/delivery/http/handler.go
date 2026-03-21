@@ -2,16 +2,16 @@ package http
 
 import (
 	"urbanstay-api/internal/domain/entity"
-	"urbanstay-api/internal/usercase"
+	"urbanstay-api/internal/usecase"
 
 	"github.com/gofiber/fiber/v3"
 )
 
 type PropertyHandler struct {
-	uc *usercase.PropertyUseCase
+	uc *usecase.PropertyUseCase
 }
 
-func NewPropertyHandler(uc *usercase.PropertyUseCase) *PropertyHandler {
+func NewPropertyHandler(uc *usecase.PropertyUseCase) *PropertyHandler {
 	return &PropertyHandler{uc: uc}
 }
 
@@ -20,10 +20,10 @@ func (h *PropertyHandler) CreateProperty(c fiber.Ctx) error {
 
 	// pegando o body do request
 	if err := c.Bind().Body(&property); err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
-	// chamando usercase passando o body
+	// chamando usecase passando o body
 	err := h.uc.ExecuteCreate(c.Context(), &property)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
