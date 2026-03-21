@@ -1,7 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"urbanstay-api/internal/delivery/http"
+	"urbanstay-api/internal/repository/memory"
+	"urbanstay-api/internal/usercase"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 func init() {
@@ -9,5 +14,15 @@ func init() {
 }
 
 func main() {
-	fmt.Println("Hello World!")
+	app := fiber.New()
+
+	repo := memory.NewMemoryRepository()
+	uc := usercase.NewPropertyUseCase(repo)
+	handler := http.NewPropertyHandler(uc)
+
+	app.Post("/properties", handler.CreateProperty)
+
+	if err := app.Listen(":8000"); err != nil {
+		log.Fatal("server error:", err.Error())
+	}
 }

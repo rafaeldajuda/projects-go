@@ -13,8 +13,9 @@ func NewMemoryRepository() *MemoryRepository {
 	return &MemoryRepository{}
 }
 
-func (m *MemoryRepository) AddProperty(ctx context.Context, p *entity.Property) {
+func (m *MemoryRepository) AddProperty(ctx context.Context, p *entity.Property) error {
 	m.Properties = append(m.Properties, p)
+	return nil
 }
 
 func (m *MemoryRepository) ListProperties(ctx context.Context) []*entity.Property {
