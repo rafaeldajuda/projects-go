@@ -26,7 +26,7 @@ Nesta fase, o foco é a pureza do domínio e a estruturação das camadas. Não 
 * Injeção de dependência via construtores.
 * Nenhuma lógica de banco de dados ou HTTP "vazando" para dentro do Usecase.
 
-Fase 2: Persistência e Configuração
+## Fase 2: Persistência e Configuração
 Nesta fase, vamos tirar as "rodinhas de treinamento" da memória e usar um banco de dados real.
 
 ### Requisitos da Fase 2:
