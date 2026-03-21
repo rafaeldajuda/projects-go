@@ -25,3 +25,13 @@ Nesta fase, o foco é a pureza do domínio e a estruturação das camadas. Não 
 * Uso de Interfaces para garantir o desacoplamento.
 * Injeção de dependência via construtores.
 * Nenhuma lógica de banco de dados ou HTTP "vazando" para dentro do Usecase.
+
+Fase 2: Persistência e Configuração
+Nesta fase, vamos tirar as "rodinhas de treinamento" da memória e usar um banco de dados real.
+
+### Requisitos da Fase 2:
+
+1. Banco de Dados: Implemente um novo repositório em internal/repository/sqlite ou postgres (recomendo SQLite para facilitar seus testes locais agora).
+2. Configuração: Crie um arquivo .env para armazenar a string de conexão do banco e a porta do servidor. Use uma biblioteca como godotenv ou viper.
+3. Migrations (Opcional, mas recomendado): O sistema deve ser capaz de criar a tabela properties ao iniciar.
+4. O Desafio SOLID: Você deve conseguir trocar o repositório de memória pelo de banco de dados no main.go alterando apenas uma linha de código, sem tocar no UseCase ou no Handler.
