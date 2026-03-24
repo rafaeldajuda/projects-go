@@ -2,7 +2,11 @@ package main
 
 import (
 	"log"
+	"urbanstay-api/internal/delivery/http"
 	"urbanstay-api/internal/repository/sql"
+	"urbanstay-api/internal/usecase"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 func init() {
@@ -10,7 +14,7 @@ func init() {
 }
 
 func main() {
-	// app := fiber.New()
+	app := fiber.New()
 
 	// repo := memory.NewMemoryRepository()
 	repo, err := sql.NewSqlProperty("sqlite3", "./data/teste.db")
@@ -19,20 +23,13 @@ func main() {
 	}
 	defer repo.Conn.Close()
 
-	repo.Conn.MustExec("CREATE TABLE person (FirstName TEXT NOT NULL);")
-	// _, err = repo.Conn.Exec(`CREATE TABLE teste_sqlite`)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// fmt.Println("fim")
+	uc := usecase.NewPropertyUseCase(repo)
+	handler := http.NewPropertyHandler(uc)
 
-	// uc := usecase.NewPropertyUseCase(repo)
-	// handler := http.NewPropertyHandler(uc)
+	app.Post("/properties", handler.CreateProperty)
+	app.Get("/properties", handler.ListProperties)
 
-	// app.Post("/properties", handler.CreateProperty)
-	// app.Get("/properties", handler.ListProperties)
-
-	// if err := app.Listen(":8000"); err != nil {
-	// 	log.Fatal("server error:", err.Error())
-	// }
+	if err := app.Listen(":8000"); err != nil {
+		log.Fatal("server error:", err.Error())
+	}
 }

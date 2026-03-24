@@ -37,7 +37,10 @@ func (h *PropertyHandler) ListProperties(c fiber.Ctx) error {
 	var properties []*entity.Property
 
 	// listando properties
-	properties = h.uc.ExecuteList(c.Context())
+	properties, err := h.uc.ExecuteList(c.Context())
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
 
 	return c.Status(fiber.StatusOK).JSON(&properties)
 }

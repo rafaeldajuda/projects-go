@@ -41,6 +41,6 @@ func (uc *PropertyUseCase) ExecuteCreate(ctx context.Context, p *entity.Property
 	return nil
 }
 
-func (uc *PropertyUseCase) ExecuteList(ctx context.Context) []*entity.Property {
+func (uc *PropertyUseCase) ExecuteList(ctx context.Context) ([]*entity.Property, error) {
 	return uc.repo.ListProperties(ctx)
 }

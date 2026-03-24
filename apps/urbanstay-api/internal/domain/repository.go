@@ -7,5 +7,5 @@ import (
 
 type PropertyRepository interface {
 	AddProperty(ctx context.Context, p *entity.Property) error
-	ListProperties(ctx context.Context) []*entity.Property
+	ListProperties(ctx context.Context) ([]*entity.Property, error)
 }
