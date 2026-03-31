@@ -3,7 +3,6 @@ package sql
 import (
 	"context"
 	"urbanstay-api/internal/domain/entity"
-	"urbanstay-api/internal/domain/schema"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
@@ -29,13 +28,13 @@ func NewSqlProperty(driverName string, dataSourceName string) (*SqlProperty, err
 	p.Conn = db
 
 	// cirando tabela
-	p.Conn.MustExec(schema.PropertySchema)
+	p.Conn.MustExec(PropertySchema)
 
 	return &p, nil
 }
 
 func (sp *SqlProperty) AddProperty(ctx context.Context, p *entity.Property) error {
-	newProperty := schema.Property{
+	newProperty := Property{
 		ID:            p.ID,
 		Name:          p.Name,
 		Description:   p.Description,
@@ -46,10 +45,10 @@ func (sp *SqlProperty) AddProperty(ctx context.Context, p *entity.Property) erro
 
 	tx, err := sp.Conn.Beginx()
 	if err != nil {
-		return nil
+		return err
 	}
 
-	_, err = tx.NamedExec(`INSERT INTO property (id, name, description, price_per_night, address, created_at) VALUES (:id, :name, :description, :price_per_night, :address, :created_at)`, &newProperty)
+	_, err = tx.NamedExecContext(ctx, `INSERT INTO property (id, name, description, price_per_night, address, created_at) VALUES (:id, :name, :description, :price_per_night, :address, :created_at)`, &newProperty)
 	if err != nil {
 		return err
 	}
@@ -63,8 +62,8 @@ func (sp *SqlProperty) AddProperty(ctx context.Context, p *entity.Property) erro
 }
 
 func (sp *SqlProperty) ListProperties(ctx context.Context) ([]*entity.Property, error) {
-	var sqlProperties []schema.Property
-	err := sp.Conn.Select(&sqlProperties, "SELECT * FROM property ORDER BY created_at ASC")
+	var sqlProperties []Property
+	err := sp.Conn.SelectContext(ctx, &sqlProperties, "SELECT * FROM property ORDER BY created_at ASC")
 	if err != nil {
 		return nil, err
 	}
