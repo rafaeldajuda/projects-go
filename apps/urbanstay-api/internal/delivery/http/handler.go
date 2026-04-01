@@ -1,8 +1,10 @@
 package http
 
 import (
+	"fmt"
 	"urbanstay-api/internal/domain/entity"
 	"urbanstay-api/internal/usecase"
+	lg "urbanstay-api/pkg/logger"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -16,21 +18,29 @@ func NewPropertyHandler(uc *usecase.PropertyUseCase) *PropertyHandler {
 }
 
 func (h *PropertyHandler) CreateProperty(c fiber.Ctx) error {
-	var property entity.Property
+	lg.Info("start CreateProperty")
+	lg.Info(c.FullPath())
+	lg.Debug(fmt.Sprintf("body request: %v", string(c.Body())))
 
 	// pegando o body do request
+	var property entity.Property
 	if err := c.Bind().Body(&property); err != nil {
+		lg.Error(err.Error())
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// chamando usecase passando o body
 	err := h.uc.ExecuteCreate(c.Context(), &property)
 	if err != nil {
+		lg.Error(err.Error())
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// resposta de sucesso
-	return c.SendStatus(fiber.StatusCreated)
+	status := fiber.StatusCreated
+	lg.Debug("response:")
+	lg.Info(fmt.Sprintf("status: %d", status))
+	return c.SendStatus(status)
 }
 
 func (h *PropertyHandler) ListProperties(c fiber.Ctx) error {
