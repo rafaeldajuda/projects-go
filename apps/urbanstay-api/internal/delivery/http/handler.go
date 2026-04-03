@@ -44,13 +44,19 @@ func (h *PropertyHandler) CreateProperty(c fiber.Ctx) error {
 }
 
 func (h *PropertyHandler) ListProperties(c fiber.Ctx) error {
+	lg.Info("start ListProperties")
+
 	var properties []*entity.Property
 
 	// listando properties
 	properties, err := h.uc.ExecuteList(c.Context())
 	if err != nil {
+		lg.Error(err.Error())
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&properties)
+	status := fiber.StatusOK
+	lg.Debug(fmt.Sprintf("response: %s", lg.JsonToString(properties)))
+	lg.Info(fmt.Sprintf("status: %d", status))
+	return c.Status(status).JSON(&properties)
 }
