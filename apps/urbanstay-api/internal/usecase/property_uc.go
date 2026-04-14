@@ -3,17 +3,17 @@ package usecase
 import (
 	"context"
 	"time"
-	"urbanstay-api/internal/domain"
 	"urbanstay-api/internal/domain/entity"
+	"urbanstay-api/internal/repository"
 
 	"github.com/google/uuid"
 )
 
 type PropertyUseCase struct {
-	repo domain.PropertyRepository
+	repo repository.PropertyRepository
 }
 
-func NewPropertyUseCase(repo domain.PropertyRepository) *PropertyUseCase {
+func NewPropertyUseCase(repo repository.PropertyRepository) *PropertyUseCase {
 	return &PropertyUseCase{
 		repo: repo,
 	}
