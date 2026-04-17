@@ -7,7 +7,6 @@ Aqui está o nosso cronograma:
 ---
 
 ## Fase 1: O Alicerce (Domínio e CRUD Base)
-Nesta fase, o foco é a pureza do domínio e a estruturação das camadas. Não quero me preocupar com bancos de dados complexos ou frameworks externos agora. Quero ver a lógica de negócio protegida.
 
 ### Requisitos da Fase 1:
 
@@ -19,15 +18,7 @@ Nesta fase, o foco é a pureza do domínio e a estruturação das camadas. Não 
 4. Interface de Repositório: Defina como o domínio espera salvar esses dados (mesmo que a implementação inicial seja em memória).
 5. Entrega (Delivery): Uma interface simples via HTTP (pode usar o pacote net/http padrão ou algo leve) para expor esses endpoints.
 
-### O que espero ver na avaliação:
-
-* Separação clara de pastas (Ex: internal/domain, internal/usecase, internal/repository, internal/delivery/http).
-* Uso de Interfaces para garantir o desacoplamento.
-* Injeção de dependência via construtores.
-* Nenhuma lógica de banco de dados ou HTTP "vazando" para dentro do Usecase.
-
 ## Fase 2: Persistência e Configuração
-Nesta fase, vamos tirar as "rodinhas de treinamento" da memória e usar um banco de dados real.
 
 ### Requisitos da Fase 2:
 
