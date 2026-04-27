@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"go.uber.org/zap"
@@ -120,12 +121,9 @@ func Debugf(messageID, template string, args ...interface{}) {
 
 // Funções para logs http
 
-func Req(messageID, name, method, url string, timeout time.Duration, headers map[string]string, body []byte) {
-	var hb []byte
-	hb, _ = json.Marshal(headers)
-
+func Req(messageID, name, method, url string, timeout time.Duration, headers []byte, body []byte) {
 	Infof(messageID, "%s | httpRequestConfig | TIMEOUT[%v] | METHOD[%s] | URL[%s]", name, timeout, method, url)
-	Debugf(messageID, "%s | requestHeader | %s", name, string(hb))
+	Debugf(messageID, "%s | requestHeader | %s", name, Clean(headers))
 
 	if len(body) == 0 {
 		Debugf(messageID, "%s | requestPayload | %s", name, "empty")
@@ -133,15 +131,12 @@ func Req(messageID, name, method, url string, timeout time.Duration, headers map
 		Debugf(messageID, "%s | requestPayload | %s", name, Clean(body))
 	}
 
-	Infof(messageID, "%s | requestHeadersSize %dB | requestBodySize %dB | requestTotalSize %dB", name, len(hb), len(body), len(hb)+len(body))
+	Infof(messageID, "%s | requestHeadersSize %dB | requestBodySize %dB | requestTotalSize %dB", name, len(headers), len(body), len(headers)+len(body))
 	Infof(messageID, "%s | request starting", name)
 }
 
-func Resp(messageID, name string, headers map[string]string, body []byte, code int) {
-	var hb []byte
-	hb, _ = json.Marshal(headers)
-
-	Debugf(messageID, "%s | responseHeader | %s", name, string(hb))
+func Resp(messageID, name string, headers []byte, body []byte, code int) {
+	Debugf(messageID, "%s | responseHeader | %s", name, Clean(headers))
 
 	if len(body) == 0 {
 		Infof(messageID, "%s | responsePayload | %s", name, "empty")
@@ -167,6 +162,14 @@ func JsonToString(obj interface{}) string {
 		return "{}"
 	}
 	return string(Clean(s))
+}
+
+func Elapsed(messageId, name string, init time.Time) {
+	end := time.Now()
+	duration := end.Sub(init)
+	durationMs := int64(duration / time.Millisecond)
+	durationString := strconv.FormatInt(durationMs, 10)
+	Infof(messageId, "totalTime | %s ms", durationString)
 }
 
 func timeNow() string {

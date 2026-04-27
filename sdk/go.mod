@@ -1,4 +1,4 @@
-module logger
+module sdk
 
 go 1.25.0
 
