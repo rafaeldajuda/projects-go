@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -31,7 +33,7 @@ func SetStd(orgName, servName, servID string) {
 }
 
 func StartZapLog() {
-	logLevel := os.Getenv("LOG_LEVEL")
+	logLevel := strings.ToLower(os.Getenv("LOG_LEVEL"))
 	fmt.Println("LOG_LEVEL:", logLevel)
 
 	config := zap.Config{
@@ -47,13 +49,13 @@ func StartZapLog() {
 	}
 
 	switch logLevel {
-	case "DEBUG":
+	case "debug":
 		config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-	case "INFO":
+	case "info":
 		config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
-	case "WARN":
+	case "warn":
 		config.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
-	case "ERROR":
+	case "error":
 		config.Level = zap.NewAtomicLevelAt(zap.ErrorLevel)
 	default:
 		config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
@@ -176,4 +178,13 @@ func timeNow() string {
 	t := time.Now()
 	timeNow := t.Format("20060102150405")
 	return timeNow
+}
+
+func GenMessageid() (string, error) {
+	newUuid, err := uuid.NewRandom()
+	if err != nil {
+		return "", err
+	}
+
+	return newUuid.String(), nil
 }
