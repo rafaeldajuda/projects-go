@@ -171,7 +171,7 @@ func Elapsed(messageId, name string, init time.Time) {
 	duration := end.Sub(init)
 	durationMs := int64(duration / time.Millisecond)
 	durationString := strconv.FormatInt(durationMs, 10)
-	Infof(messageId, "totalTime | %s ms", durationString)
+	Infof(messageId, "%s | totalTime | %s ms", name, durationString)
 }
 
 func timeNow() string {
